@@ -398,7 +398,7 @@ class WanTI2V:
 
                 noise_pred_cond = self.model(
                     latent_model_input, t=timestep, **arg_c)[0]
-                if guide_scale > 1.0 + 1e-5 or guide_scale < 1.0 - 1e-5:
+                if use_cfg(guide_scale):
                     noise_pred_uncond = self.model(
                         latent_model_input, t=timestep, **arg_null)[0]
 
@@ -610,7 +610,7 @@ class WanTI2V:
                     latent_model_input, t=timestep, **arg_c)[0]
                 if offload_model:
                     torch.cuda.empty_cache()
-                if guide_scale > 1.0 + 1e-5 or guide_scale < 1.0 - 1e-5:
+                if use_cfg(guide_scale):
                     noise_pred_uncond = self.model(
                         latent_model_input, t=timestep, **arg_null)[0]
                     if offload_model:
