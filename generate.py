@@ -163,7 +163,7 @@ def _parse_args():
     parser.add_argument(
         "--base_seed",
         type=int,
-        default=-1,
+        default=42,
         help="The seed to use for generating the video.")
     parser.add_argument(
         "--image",
@@ -173,9 +173,9 @@ def _parse_args():
     parser.add_argument(
         "--sample_solver",
         type=str,
-        default='unipc',
-        choices=['unipc', 'dpm++'],
-        help="The solver used to sample.")
+        default='euler',
+        choices=['euler'],
+        help="The solver used to sample. Please use euler which is adopted in distillation")
     parser.add_argument(
         "--sample_steps", type=int, default=None, help="The sampling steps.")
     parser.add_argument(
@@ -316,16 +316,34 @@ def generate(args):
         )
 
         logging.info(f"Generating video ...")
-        video = wan_t2v.generate(
-            args.prompt,
-            size=SIZE_CONFIGS[args.size],
-            frame_num=args.frame_num,
-            shift=args.sample_shift,
-            sample_solver=args.sample_solver,
-            sampling_steps=args.sample_steps,
-            guide_scale=args.sample_guide_scale,
-            seed=args.base_seed,
-            offload_model=args.offload_model)
+        for i in range(20):
+            video = wan_t2v.generate(
+                args.prompt,
+                size=SIZE_CONFIGS[args.size],
+                frame_num=args.frame_num,
+                shift=args.sample_shift,
+                sample_solver=args.sample_solver,
+                sampling_steps=args.sample_steps,
+                guide_scale=args.sample_guide_scale,
+                seed=args.base_seed + i,
+                offload_model=args.offload_model)
+            if rank == 0:
+                if args.save_file is None:
+                    formatted_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    formatted_prompt = args.prompt.replace(" ", "_").replace("/",
+                                                                            "_")[:50]
+                    suffix = '.mp4'
+                    save_file = f"repeat{i}_{args.task}_{args.size.replace('*','x') if sys.platform=='win32' else args.size}_{args.ulysses_size}_{formatted_prompt}_{formatted_time}" + suffix
+
+                logging.info(f"Saving generated video to {save_file}")
+                save_video(
+                    tensor=video[None],
+                    save_file=save_file,
+                    fps=cfg.sample_fps,
+                    nrow=1,
+                    normalize=True,
+                    value_range=(-1, 1))
+            del video
     elif "ti2v" in args.task:
         logging.info("Creating WanTI2V pipeline.")
         wan_ti2v = wan.WanTI2V(
@@ -341,18 +359,36 @@ def generate(args):
         )
 
         logging.info(f"Generating video ...")
-        video = wan_ti2v.generate(
-            args.prompt,
-            img=img,
-            size=SIZE_CONFIGS[args.size],
-            max_area=MAX_AREA_CONFIGS[args.size],
-            frame_num=args.frame_num,
-            shift=args.sample_shift,
-            sample_solver=args.sample_solver,
-            sampling_steps=args.sample_steps,
-            guide_scale=args.sample_guide_scale,
-            seed=args.base_seed,
-            offload_model=args.offload_model)
+        for i in range(20):
+            video = wan_ti2v.generate(
+                args.prompt,
+                img=img,
+                size=SIZE_CONFIGS[args.size],
+                max_area=MAX_AREA_CONFIGS[args.size],
+                frame_num=args.frame_num,
+                shift=args.sample_shift,
+                sample_solver=args.sample_solver,
+                sampling_steps=args.sample_steps,
+                guide_scale=args.sample_guide_scale,
+                seed=args.base_seed + 1,
+                offload_model=args.offload_model)
+            if rank == 0:
+                if args.save_file is None:
+                    formatted_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    formatted_prompt = args.prompt.replace(" ", "_").replace("/",
+                                                                            "_")[:50]
+                    suffix = '.mp4'
+                    save_file = f"repeat{i}_{args.task}_{args.size.replace('*','x') if sys.platform=='win32' else args.size}_{args.ulysses_size}_{formatted_prompt}_{formatted_time}" + suffix
+
+                logging.info(f"Saving generated video to {save_file}")
+                save_video(
+                    tensor=video[None],
+                    save_file=save_file,
+                    fps=cfg.sample_fps,
+                    nrow=1,
+                    normalize=True,
+                    value_range=(-1, 1))
+            del video
     else:
         logging.info("Creating WanI2V pipeline.")
         wan_i2v = wan.WanI2V(

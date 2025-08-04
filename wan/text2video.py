@@ -20,13 +20,14 @@ from .distributed.util import get_world_size
 from .modules.model import WanModel
 from .modules.t5 import T5EncoderModel
 from .modules.vae2_1 import Wan2_1_VAE
-from .utils.fm_solvers import (
-    FlowDPMSolverMultistepScheduler,
-    get_sampling_sigmas,
-    retrieve_timesteps,
-)
-from .utils.fm_solvers_unipc import FlowUniPCMultistepScheduler
-
+# from .utils.fm_solvers import (
+#     FlowDPMSolverMultistepScheduler,
+#     get_sampling_sigmas,
+#     retrieve_timesteps,
+# )
+# from .utils.fm_solvers_unipc import FlowUniPCMultistepScheduler
+from .utils.fm_solvers_euler import EulerScheduler
+from .utils.utils import model_safe_downcast, load_and_merge_lora_weight_from_safetensors
 
 class WanT2V:
 
@@ -98,8 +99,10 @@ class WanT2V:
             device=self.device)
 
         logging.info(f"Creating WanModel from {checkpoint_dir}")
-        self.low_noise_model = WanModel.from_pretrained(
-            checkpoint_dir, subfolder=config.low_noise_checkpoint)
+        # self.low_noise_model = WanModel.from_pretrained(
+        #     checkpoint_dir, subfolder=config.low_noise_checkpoint)
+        self.low_noise_model = WanModel.from_pretrained("Wan2.2-T2V-A14B-4steps-300iter-ema/low_noise_model")
+        # self.low_noise_model = load_and_merge_lora_weight_from_safetensors(self.low_noise_model, config.low_noise_lora)
         self.low_noise_model = self._configure_model(
             model=self.low_noise_model,
             use_sp=use_sp,
@@ -107,8 +110,10 @@ class WanT2V:
             shard_fn=shard_fn,
             convert_model_dtype=convert_model_dtype)
 
-        self.high_noise_model = WanModel.from_pretrained(
-            checkpoint_dir, subfolder=config.high_noise_checkpoint)
+        # self.high_noise_model = WanModel.from_pretrained(
+        #     checkpoint_dir, subfolder=config.high_noise_checkpoint)
+        self.high_noise_model = WanModel.from_pretrained("Wan2.2-T2V-A14B-4steps-300iter-ema/high_noise_model")
+        # self.high_noise_model = load_and_merge_lora_weight_from_safetensors(self.high_noise_model, config.low_noise_lora)
         self.high_noise_model = self._configure_model(
             model=self.high_noise_model,
             use_sp=use_sp,
@@ -161,6 +166,12 @@ class WanT2V:
         else:
             if convert_model_dtype:
                 model.to(self.param_dtype)
+            else:
+                model_safe_downcast(
+                    model,
+                    dtype=self.param_dtype,
+                    keep_in_fp32_modules=[],
+                    keep_in_fp32_parameters=model._keep_in_fp32_params)
             if not self.init_on_cpu:
                 model.to(self.device)
 
@@ -305,26 +316,13 @@ class WanT2V:
         ):
             boundary = self.boundary * self.num_train_timesteps
 
-            if sample_solver == 'unipc':
-                sample_scheduler = FlowUniPCMultistepScheduler(
-                    num_train_timesteps=self.num_train_timesteps,
-                    shift=1,
-                    use_dynamic_shifting=False)
-                sample_scheduler.set_timesteps(
-                    sampling_steps, device=self.device, shift=shift)
-                timesteps = sample_scheduler.timesteps
-            elif sample_solver == 'dpm++':
-                sample_scheduler = FlowDPMSolverMultistepScheduler(
-                    num_train_timesteps=self.num_train_timesteps,
-                    shift=1,
-                    use_dynamic_shifting=False)
-                sampling_sigmas = get_sampling_sigmas(sampling_steps, shift)
-                timesteps, _ = retrieve_timesteps(
-                    sample_scheduler,
-                    device=self.device,
-                    sigmas=sampling_sigmas)
-            else:
-                raise NotImplementedError("Unsupported solver.")
+            sample_scheduler = EulerScheduler(
+                num_train_timesteps=self.num_train_timesteps,
+                shift=shift,
+                device=self.device)
+            sample_scheduler.set_timesteps(
+                sampling_steps, device=self.device)
+            timesteps = sample_scheduler.timesteps[:-1].clone()
 
             # sample videos
             latents = noise
@@ -345,11 +343,14 @@ class WanT2V:
 
                 noise_pred_cond = model(
                     latent_model_input, t=timestep, **arg_c)[0]
-                noise_pred_uncond = model(
-                    latent_model_input, t=timestep, **arg_null)[0]
+                if sample_guide_scale > 1.0 + 1e-5 or sample_guide_scale < 1.0 - 1e-5:
+                    noise_pred_uncond = model(
+                        latent_model_input, t=timestep, **arg_null)[0]
 
-                noise_pred = noise_pred_uncond + sample_guide_scale * (
-                    noise_pred_cond - noise_pred_uncond)
+                    noise_pred = noise_pred_uncond + sample_guide_scale * (
+                        noise_pred_cond - noise_pred_uncond)
+                else:
+                    noise_pred = noise_pred_cond
 
                 temp_x0 = sample_scheduler.step(
                     noise_pred.unsqueeze(0),

@@ -4,13 +4,85 @@ import binascii
 import logging
 import os
 import os.path as osp
-
+import torch.nn as nn
 import imageio
 import torch
 import torchvision
+from safetensors import safe_open
 
 __all__ = ['save_video', 'save_image', 'str2bool']
 
+
+
+def model_safe_downcast(
+    model: nn.Module, 
+    dtype: torch.dtype = torch.bfloat16, 
+    keep_in_fp32_modules: list[str]|tuple[str,...]|None = None, 
+    keep_in_fp32_parameters: list[str]|tuple[str,...]|None = None,
+    verbose: bool = False,
+) -> nn.Module:
+    """
+    Downcast model parameters and buffers to a specified dtype, while keeping certain modules/parameters in fp32.
+
+    Args:
+        model: The PyTorch model to downcast
+        dtype: The target dtype to downcast to (default: torch.bfloat16)
+        keep_in_fp32_modules: List of module names to keep in fp32, fuzzy matching is supported
+        keep_in_fp32_parameters: List of parameter names to keep in fp32, exact matching is required
+        verbose: Whether to print information.
+
+    Returns:
+        The downcast model (modified in-place)
+    """
+    keep_in_fp32_modules = list(keep_in_fp32_modules or [])
+    keep_in_fp32_modules.extend(getattr(model, "_keep_in_fp32_modules", []))
+    keep_in_fp32_parameters = keep_in_fp32_parameters or []
+
+    for name, module in model.named_modules():
+        # Skip if module is in keep_in_fp32_modules list
+        if any(keep_name in name for keep_name in keep_in_fp32_modules):
+            if verbose:
+                print(f"Skipping {name} because it is in keep_in_fp32_modules")
+            continue
+
+        # Downcast parameters
+        for param_name, param in module.named_parameters(recurse=False):
+            full_param_name = f"{name}.{param_name}" if name else param_name
+            if param is not None:
+                if full_param_name in keep_in_fp32_parameters and verbose:
+                    print(f"Skipping {full_param_name} because it is in keep_in_fp32_parameters")
+                # if not any(keep_name in full_param_name for keep_name in keep_in_fp32_parameters):
+                else:
+                    param.data = param.data.to(dtype)
+
+        # Downcast buffers
+        for buffer_name, buffer in module.named_buffers(recurse=False):
+            if buffer is not None:
+                buffer.data = buffer.data.to(dtype)
+    return model
+
+def load_and_merge_lora_weight(model_state_dict, lora_state_dict, alpha:int=8, lora_down_key:str="lora_down.", lora_up_key:str="lora_up.", device:str='cuda'):
+    for key, value in lora_state_dict.items():
+        assert lora_down_key in key or lora_up_key in key or len(value.shape) <= 1
+        if lora_down_key in key:
+            ori_key = key.replace(lora_down_key, "")
+            lora_B = lora_state_dict[key.replace(lora_down_key, lora_up_key)]
+            rank = value.shape[0]
+            scaling_factor = alpha / rank
+            assert value.dtype == torch.float32
+            assert lora_B.dtype == torch.float32
+            delta_W = scaling_factor * torch.matmul(lora_B.to(device), value.to(device)).to(lora_B.device)
+            model_state_dict[ori_key] = model_state_dict[ori_key] + delta_W
+    return model_state_dict
+
+def load_and_merge_lora_weight_from_safetensors(model, lora_weight_path, alpha:int=8, lora_down_key:str="lora_down.", lora_up_key:str="lora_up."):
+    lora_state_dict = {}
+    with safe_open(lora_weight_path, framework="pt", device="cpu") as f:
+        for key in f.keys():
+            lora_state_dict[key] = f.get_tensor(key)
+    state_dict = load_and_merge_lora_weight(model.state_dict(), lora_state_dict, alpha, lora_down_key, lora_up_key)
+    model.load_state_dict(state_dict)
+    return model
 
 def rand_name(length=8, suffix=''):
     name = binascii.b2a_hex(os.urandom(length)).decode('utf-8')

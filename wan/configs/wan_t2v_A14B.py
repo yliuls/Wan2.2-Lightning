@@ -31,7 +31,12 @@ t2v_A14B.low_noise_checkpoint = 'low_noise_model'
 t2v_A14B.high_noise_checkpoint = 'high_noise_model'
 
 # inference
-t2v_A14B.sample_shift = 12.0
-t2v_A14B.sample_steps = 40
+t2v_A14B.sample_shift = 5.0
+t2v_A14B.sample_steps = 4
 t2v_A14B.boundary = 0.875
-t2v_A14B.sample_guide_scale = (3.0, 4.0)  # low noise, high noise
+t2v_A14B.sample_guide_scale = (1.0, 1.0)  # low noise, high noise
+
+
+# lora
+t2v_A14B.low_noise_lora = 'Wan2.2-lightning/Wan2.2-T2V-A14B/low_noise_model_4step_lora.safetensors'
+t2v_A14B.high_noise_lora = 'Wan2.2-lightning/Wan2.2-T2V-A14B/high_noise_model_4step_lora.safetensors'
