@@ -87,7 +87,6 @@ def load_and_merge_lora_weight_from_safetensors(model, lora_weight_path, alpha:i
         for key in f.keys():
             lora_state_dict[key] = f.get_tensor(key)
     model = load_and_merge_lora_weight(model, lora_state_dict, alpha, lora_down_key, lora_up_key)
-    # model.load_state_dict(state_dict)
     return model
 
 def rand_name(length=8, suffix=''):
