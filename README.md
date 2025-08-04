@@ -21,121 +21,85 @@ We are excited to release the distilled version of <a href="https://wan.video"><
           <video src="https://github.com/user-attachments/assets/29ded349-9ebd-4de4-aa3c-7cdc1089fc86" width="320" controls loop></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/f0396c19-d459-42aa-9d78-34fdea10de18" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/890c0b46-6cd4-4b3f-8a54-b464b6aef2ec" width="320" controls loop></video>
       </td>
        <td>
-          <video src="https://github.com/user-attachments/assets/3576fd04-3e5f-4933-ac7b-1c4e6a601379" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/bc88263d-e934-4ea4-855e-820f1e5e22eb" width="320" controls loop></video>
      </td>
   </tr>
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/5589056e-3202-442d-a62a-2cad7a7ecb19" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/4956e5b2-6f3f-4d47-a73e-8d82f010128f" width="320" controls loop></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/554bfbe7-0090-492c-94be-329f5e39e175" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/04101a92-9c19-4b47-a3fc-934f6aa2932c" width="320" controls loop></video>
       </td>
        <td>
-          <video src="https://github.com/user-attachments/assets/9e961f35-9413-4846-a806-8186d54061da" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/d41cb4c5-3ee5-46fa-b1ef-016b69fdd58e" width="320" controls loop></video>
      </td>
   </tr>
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/342595ab-cf75-4872-8182-f20fe8c95611" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/7cfd8d7a-750a-4e76-b622-f1f63618e4a5" width="320" controls loop></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/6476f9f0-35e0-4484-91a4-8aa646aa994a" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/2bbefcb9-a519-4e3d-9449-cb9833ee6405" width="320" controls loop></video>
       </td>
        <td>
-          <video src="https://github.com/user-attachments/assets/d8fc8e94-0cba-4c25-9f3a-a8d7e0a785e1" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/6a2de19f-b9ec-4c22-82c9-49eb2fd3edb8" width="320" controls loop></video>
      </td>
   </tr>
 </table>
+
 ## 🔥 Latest News!!
 
-* Jul 28, 2025: 👋 We have open a [HF space](https://huggingface.co/spaces/Wan-AI/Wan-2.2-5B) using the TI2V-5B model. Enjoy!
-* Jul 28, 2025: 👋 Wan2.2 has been integrated into ComfyUI ([CN](https://docs.comfy.org/zh-CN/tutorials/video/wan/wan2_2) | [EN](https://docs.comfy.org/tutorials/video/wan/wan2_2)). Enjoy!
-* Jul 28, 2025: 👋 Wan2.2's T2V, I2V and TI2V have been integrated into Diffusers ([T2V-A14B](https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B-Diffusers) | [I2V-A14B](https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B-Diffusers) | [TI2V-5B](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers)). Feel free to give it a try!
-* Jul 28, 2025: 👋 We've released the inference code and model weights of **Wan2.2**.
+* Aug 04, 2025: 👋 We have open the  [Wan2.2-T2V-A14B-NFE4](https://hf-mirror.com/lightx2v/Wan2.2-Lightning). Enjoy!
 
 
-## Community Works
+<!-- ## Community Works
 If your research or project builds upon [**Wan2.1**](https://github.com/Wan-Video/Wan2.1) or [**Wan2.2**](https://github.com/Wan-Video/Wan2.2), and you would like more people to see it, please inform us.
 
-- [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio) provides comprehensive support for Wan 2.2, including low-GPU-memory layer-by-layer offload, FP8 quantization, sequence parallelism, LoRA training, full training.
+- [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio) provides comprehensive support for Wan 2.2, including low-GPU-memory layer-by-layer offload, FP8 quantization, sequence parallelism, LoRA training, full training. -->
 
 
 ## 📑 Todo List
-- Wan2.2 Text-to-Video
-    - [x] Multi-GPU Inference code of the A14B and 14B models
-    - [x] Checkpoints of the A14B and 14B models
-    - [x] ComfyUI integration
-    - [x] Diffusers integration
-- Wan2.2 Image-to-Video
-    - [x] Multi-GPU Inference code of the A14B model
-    - [x] Checkpoints of the A14B model
-    - [x] ComfyUI integration
-    - [x] Diffusers integration
-- Wan2.2 Text-Image-to-Video
-    - [x] Multi-GPU Inference code of the 5B model
-    - [x] Checkpoints of the 5B model
-    - [x] ComfyUI integration
-    - [x] Diffusers integration
+- [x] Wan2.2-T2V-A14B-4steps
+- [ ] Wan2.2-TI2V-5B-4steps
+- [ ] Wan2.2-I2V-A14B-4steps
 
-## Run Wan2.2
+## Run Wan2.2-Lightning
 
 #### Installation
-Clone the repo:
-```sh
-git clone https://github.com/Wan-Video/Wan2.2.git
-cd Wan2.2
-```
 
-Install dependencies:
-```sh
-# Ensure torch >= 2.4.0
-# If the installation of `flash_attn` fails, try installing the other packages first and install `flash_attn` last
-pip install -r requirements.txt
-```
-
+Please follow [Wan2.2 Official Github](https://github.com/Wan-Video/Wan2.2/) to install the **Python Environment** and download the **Base Model**.
 
 #### Model Download
-
-| Models              | Download Links                                                                                                                              | Description |
-|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| T2V-A14B    | 🤗 [Huggingface](https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B)    🤖 [ModelScope](https://modelscope.cn/models/Wan-AI/Wan2.2-T2V-A14B)    | Text-to-Video MoE model, supports 480P & 720P |
-| I2V-A14B    | 🤗 [Huggingface](https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B)    🤖 [ModelScope](https://modelscope.cn/models/Wan-AI/Wan2.2-I2V-A14B)    | Image-to-Video MoE model, supports 480P & 720P |
-| TI2V-5B     | 🤗 [Huggingface](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B)     🤖 [ModelScope](https://modelscope.cn/models/Wan-AI/Wan2.2-TI2V-5B)     | High-compression VAE, T2V+I2V, supports 720P |
-
-
-> 💡Note: 
-> The TI2V-5B model supports 720P video generation at **24 FPS**.
-
 
 Download models using huggingface-cli:
 ``` sh
 pip install "huggingface_hub[cli]"
 huggingface-cli download Wan-AI/Wan2.2-T2V-A14B --local-dir ./Wan2.2-T2V-A14B
-```
-
-Download models using modelscope-cli:
-``` sh
-pip install modelscope
-modelscope download Wan-AI/Wan2.2-T2V-A14B --local_dir ./Wan2.2-T2V-A14B
+huggingface-cli download lightx2v/Wan2.2-Lightning --local-dir ./Wan2.2-Lightning
 ```
 
 #### Run Text-to-Video Generation
 
-This repository supports the `Wan2.2-T2V-A14B` Text-to-Video model and can simultaneously support video generation at 480P and 720P resolutions.
+This repository supports the `Wan2.2-T2V-A14B` Text-to-Video model and can simultaneously support video generation at 480P and 720P resolutions, either portrait or landscape.
 
 
 ##### (1) Without Prompt Extension
 
 To facilitate implementation, we will start with a basic version of the inference process that skips the [prompt extension](#2-using-prompt-extention) step.
 
-- Single-GPU inference
+- Single-GPU, Single-prompt inference
 
 ``` sh
-python generate.py  --task t2v-A14B --size 1280*720 --ckpt_dir ./Wan2.2-T2V-A14B --offload_model True --convert_model_dtype --prompt "Two anthropomorphic cats in comfy boxing gear and bright gloves fight intensely on a spotlighted stage."
+python generate.py  --task t2v-A14B --size "1280*720" --ckpt_dir ./Wan2.2-T2V-A14B --lora_dir ./Wan2.2-Lightning/Wan2.2-T2V-A14B-4steps-lora-rank64-V1 --offload_model True --base_seed 42 --prompt "Two anthropomorphic cats in comfy boxing gear and bright gloves fight intensely on a spotlighted stage."
+```
+
+- Single-GPU, Multiple-prompt inference
+``` sh
+python generate.py  --task t2v-A14B --size "1280*720" --ckpt_dir ./Wan2.2-T2V-A14B --lora_dir ./Wan2.2-Lightning/Wan2.2-T2V-A14B-4steps-lora-rank64-V1 --offload_model True --base_seed 42 --prompt_file examples/prompt_list.txt
 ```
 
 > 💡 This command can run on a GPU with at least 80GB VRAM.
@@ -149,7 +113,7 @@ python generate.py  --task t2v-A14B --size 1280*720 --ckpt_dir ./Wan2.2-T2V-A14B
 
 
 ``` sh
-torchrun --nproc_per_node=8 generate.py --task t2v-A14B --size 1280*720 --ckpt_dir ./Wan2.2-T2V-A14B --dit_fsdp --t5_fsdp --ulysses_size 8 --prompt "Two anthropomorphic cats in comfy boxing gear and bright gloves fight intensely on a spotlighted stage."
+torchrun --nproc_per_node=8 generate.py --task t2v-A14B --size "1280*720" --ckpt_dir ./Wan2.2-T2V-A14B --dit_fsdp --t5_fsdp --ulysses_size 8 --base_seed 42 --prompt_file examples/prompt_list.txt
 ```
 
 
@@ -246,7 +210,7 @@ torchrun --nproc_per_node=8 generate.py --task ti2v-5B --size 1280*704 --ckpt_di
 > The process of prompt extension can be referenced [here](#2-using-prompt-extention).
 
 
-
+<!-- 
 
 ## Computational Efficiency on Different GPUs
 
@@ -295,16 +259,16 @@ To enable more efficient deployment, Wan2.2 also explores a high-compression des
 <div align="center">
     <img src="assets/vae.png" alt="" style="width: 80%;" />
 </div>
+ -->
 
 
-
-##### Comparisons to SOTAs
+<!-- ##### Comparisons to SOTAs
 We compared Wan2.2 with leading closed-source commercial models on our new Wan-Bench 2.0, evaluating performance across multiple crucial dimensions. The results demonstrate that Wan2.2 achieves superior performance compared to these leading models.
 
 
 <div align="center">
     <img src="assets/performance.png" alt="" style="width: 90%;" />
-</div>
+</div> -->
 
 ## Citation
 If you find our work helpful, please cite us.
