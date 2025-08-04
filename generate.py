@@ -328,11 +328,11 @@ def generate(args):
     
     image_list = []
     for image_path in image_path_list:
-        if image_path:
+        if image_path is not None:
             image_list.append(Image.open(image_path).convert("RGB"))
         else:
             image_list.append(None)
-
+    assert len(prompt_list) == len(image_list), "Please make sure the length of prompt_list and the image_list be the same."
     # prompt extend
     if args.use_prompt_extend:
         logging.info("Extending prompt ...")

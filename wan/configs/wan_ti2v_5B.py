@@ -36,4 +36,4 @@ ti2v_5B.sample_guide_scale = 1.0
 ti2v_5B.frame_num = 121
 
 # lora
-ti2v_5B.lora_checkpoint = 'Wan2.2-TI2V-5B-4steps-rank64-Seko.safetensors'
+ti2v_5B.lora_checkpoint = 'diffusion_pytorch_model.safetensors'
