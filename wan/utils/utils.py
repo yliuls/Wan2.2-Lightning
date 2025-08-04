@@ -80,21 +80,6 @@ def load_and_merge_lora_weight(model, lora_state_dict, alpha:int|None=None, lora
             value.data = value.data + delta_W
     return model
 
-    # for key, value in lora_state_dict.items():
-    #     assert lora_down_key in key or lora_up_key in key or len(value.shape) <= 1
-    #     if lora_down_key in key:
-    #         ori_key = key.replace(lora_down_key, "")
-    #         lora_B = lora_state_dict[key.replace(lora_down_key, lora_up_key)]
-    #         rank = value.shape[0]
-    #         if alpha is None:
-    #             scaling_factor = 1
-    #         else:
-    #             scaling_factor = alpha / rank
-    #         assert value.dtype == torch.float32
-    #         assert lora_B.dtype == torch.float32
-    #         delta_W = scaling_factor * torch.matmul(lora_B.to(device), value.to(device)).to(lora_B.device)
-    #         model_state_dict[ori_key] = model_state_dict[ori_key] + delta_W
-    # return model_state_dict
 
 def load_and_merge_lora_weight_from_safetensors(model, lora_weight_path, alpha:int|None=None, lora_down_key:str=".lora_down.weight", lora_up_key:str=".lora_up.weight"):
     lora_state_dict = {}
