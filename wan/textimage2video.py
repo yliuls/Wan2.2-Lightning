@@ -22,14 +22,15 @@ from .distributed.util import get_world_size
 from .modules.model import WanModel
 from .modules.t5 import T5EncoderModel
 from .modules.vae2_2 import Wan2_2_VAE
-# from .utils.fm_solvers import (
-#     FlowDPMSolverMultistepScheduler,
-#     get_sampling_sigmas,
-#     retrieve_timesteps,
-# )
-# from .utils.fm_solvers_unipc import FlowUniPCMultistepScheduler
+from .utils.fm_solvers import (
+    FlowDPMSolverMultistepScheduler,
+    get_sampling_sigmas,
+    retrieve_timesteps,
+)
+from .utils.fm_solvers_unipc import FlowUniPCMultistepScheduler
 from .utils.fm_solvers_euler import EulerScheduler
-from .utils.utils import model_safe_downcast, load_and_merge_lora_weight_from_safetensors
+from .utils.utils import model_safe_downcast, load_and_merge_lora_weight_from_safetensors, use_cfg
+
 
 
 from .utils.utils import best_output_size, masks_like
@@ -41,6 +42,7 @@ class WanTI2V:
         self,
         config,
         checkpoint_dir,
+        lora_dir,
         device_id=0,
         rank=0,
         t5_fsdp=False,
@@ -104,9 +106,10 @@ class WanTI2V:
             device=self.device)
 
         logging.info(f"Creating WanModel from {checkpoint_dir}")
-        # self.model = WanModel.from_pretrained(checkpoint_dir)
-        self.model = WanModel.from_pretrained("Wan2.2-TI2V-5B-4steps/")
-        # self.model = load_and_merge_lora_weight_from_safetensors(self.model, config.lora_path)
+        self.model = WanModel.from_pretrained(checkpoint_dir)
+        if lora_dir:
+            lora_path = os.path.join(lora_dir, config.lora_checkpoint)
+            self.model = load_and_merge_lora_weight_from_safetensors(self.model, lora_path, alpha=8)
         self.model = self._configure_model(
             model=self.model,
             use_sp=use_sp,
@@ -340,13 +343,34 @@ class WanTI2V:
                 torch.no_grad(),
                 no_sync(),
         ):
-            sample_scheduler = EulerScheduler(
-                num_train_timesteps=self.num_train_timesteps,
-                shift=shift,
-                device=self.device)
-            sample_scheduler.set_timesteps(
-                sampling_steps, device=self.device)
-            timesteps = sample_scheduler.timesteps[:-1].clone()
+            if sample_solver == 'unipc':
+                sample_scheduler = FlowUniPCMultistepScheduler(
+                    num_train_timesteps=self.num_train_timesteps,
+                    shift=1,
+                    use_dynamic_shifting=False)
+                sample_scheduler.set_timesteps(
+                    sampling_steps, device=self.device, shift=shift)
+                timesteps = sample_scheduler.timesteps
+            elif sample_solver == 'dpm++':
+                sample_scheduler = FlowDPMSolverMultistepScheduler(
+                    num_train_timesteps=self.num_train_timesteps,
+                    shift=1,
+                    use_dynamic_shifting=False)
+                sampling_sigmas = get_sampling_sigmas(sampling_steps, shift)
+                timesteps, _ = retrieve_timesteps(
+                    sample_scheduler,
+                    device=self.device,
+                    sigmas=sampling_sigmas)
+            elif sample_solver == "euler":
+                sample_scheduler = EulerScheduler(
+                    num_train_timesteps=self.num_train_timesteps,
+                    shift=shift,
+                    device=self.device)
+                sample_scheduler.set_timesteps(
+                    sampling_steps, device=self.device)
+                timesteps = sample_scheduler.timesteps[:-1].clone()
+            else:
+                raise NotImplementedError("Unsupported solver.")
 
             # sample videos
             latents = noise
@@ -521,13 +545,34 @@ class WanTI2V:
                 torch.no_grad(),
                 no_sync(),
         ):
-            sample_scheduler = EulerScheduler(
-                num_train_timesteps=self.num_train_timesteps,
-                shift=shift,
-                device=self.device)
-            sample_scheduler.set_timesteps(
-                sampling_steps, device=self.device)
-            timesteps = sample_scheduler.timesteps[:-1].clone()
+            if sample_solver == 'unipc':
+                sample_scheduler = FlowUniPCMultistepScheduler(
+                    num_train_timesteps=self.num_train_timesteps,
+                    shift=1,
+                    use_dynamic_shifting=False)
+                sample_scheduler.set_timesteps(
+                    sampling_steps, device=self.device, shift=shift)
+                timesteps = sample_scheduler.timesteps
+            elif sample_solver == 'dpm++':
+                sample_scheduler = FlowDPMSolverMultistepScheduler(
+                    num_train_timesteps=self.num_train_timesteps,
+                    shift=1,
+                    use_dynamic_shifting=False)
+                sampling_sigmas = get_sampling_sigmas(sampling_steps, shift)
+                timesteps, _ = retrieve_timesteps(
+                    sample_scheduler,
+                    device=self.device,
+                    sigmas=sampling_sigmas)
+            elif sample_solver == "euler":
+                sample_scheduler = EulerScheduler(
+                    num_train_timesteps=self.num_train_timesteps,
+                    shift=shift,
+                    device=self.device)
+                sample_scheduler.set_timesteps(
+                    sampling_steps, device=self.device)
+                timesteps = sample_scheduler.timesteps[:-1].clone()
+            else:
+                raise NotImplementedError("Unsupported solver.")
 
             # sample videos
             latent = noise

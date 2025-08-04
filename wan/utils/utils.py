@@ -12,6 +12,8 @@ from safetensors import safe_open
 
 __all__ = ['save_video', 'save_image', 'str2bool']
 
+def use_cfg(cfg_scale:float=1.0, eps:float=1e-6):
+    return cfg_scale > 1.0 + eps or cfg_scale < 1.0 - eps
 
 
 def model_safe_downcast(
@@ -61,27 +63,46 @@ def model_safe_downcast(
                 buffer.data = buffer.data.to(dtype)
     return model
 
-def load_and_merge_lora_weight(model_state_dict, lora_state_dict, alpha:int=8, lora_down_key:str="lora_down.", lora_up_key:str="lora_up.", device:str='cuda'):
-    for key, value in lora_state_dict.items():
-        assert lora_down_key in key or lora_up_key in key or len(value.shape) <= 1
-        if lora_down_key in key:
-            ori_key = key.replace(lora_down_key, "")
-            lora_B = lora_state_dict[key.replace(lora_down_key, lora_up_key)]
-            rank = value.shape[0]
-            scaling_factor = alpha / rank
-            assert value.dtype == torch.float32
-            assert lora_B.dtype == torch.float32
-            delta_W = scaling_factor * torch.matmul(lora_B.to(device), value.to(device)).to(lora_B.device)
-            model_state_dict[ori_key] = model_state_dict[ori_key] + delta_W
-    return model_state_dict
+def load_and_merge_lora_weight(model, lora_state_dict, alpha:int|None=None, lora_down_key:str=".lora_down.weight", lora_up_key:str=".lora_up.weight", device:str='cuda'):
+    for key, value in model.named_parameters():
+        lora_down_name = key.replace(".weight", lora_down_key)
+        if lora_down_name in lora_state_dict:
+            lora_down = lora_state_dict[lora_down_name]
+            lora_up = lora_state_dict[key.replace(".weight", lora_up_key)]
+            rank = lora_down.shape[0]
+            if alpha is None:
+                scaling_factor = 1
+            else:
+                scaling_factor = alpha / rank
+            assert lora_up.dtype == torch.float32
+            assert lora_down.dtype == torch.float32
+            delta_W = scaling_factor * torch.matmul(lora_up, lora_down)
+            value.data = value.data + delta_W
+    return model
 
-def load_and_merge_lora_weight_from_safetensors(model, lora_weight_path, alpha:int=8, lora_down_key:str="lora_down.", lora_up_key:str="lora_up."):
+    # for key, value in lora_state_dict.items():
+    #     assert lora_down_key in key or lora_up_key in key or len(value.shape) <= 1
+    #     if lora_down_key in key:
+    #         ori_key = key.replace(lora_down_key, "")
+    #         lora_B = lora_state_dict[key.replace(lora_down_key, lora_up_key)]
+    #         rank = value.shape[0]
+    #         if alpha is None:
+    #             scaling_factor = 1
+    #         else:
+    #             scaling_factor = alpha / rank
+    #         assert value.dtype == torch.float32
+    #         assert lora_B.dtype == torch.float32
+    #         delta_W = scaling_factor * torch.matmul(lora_B.to(device), value.to(device)).to(lora_B.device)
+    #         model_state_dict[ori_key] = model_state_dict[ori_key] + delta_W
+    # return model_state_dict
+
+def load_and_merge_lora_weight_from_safetensors(model, lora_weight_path, alpha:int|None=None, lora_down_key:str=".lora_down.weight", lora_up_key:str=".lora_up.weight"):
     lora_state_dict = {}
     with safe_open(lora_weight_path, framework="pt", device="cpu") as f:
         for key in f.keys():
             lora_state_dict[key] = f.get_tensor(key)
-    state_dict = load_and_merge_lora_weight(model.state_dict(), lora_state_dict, alpha, lora_down_key, lora_up_key)
-    model.load_state_dict(state_dict)
+    model = load_and_merge_lora_weight(model, lora_state_dict, alpha, lora_down_key, lora_up_key)
+    # model.load_state_dict(state_dict)
     return model
 
 def rand_name(length=8, suffix=''):

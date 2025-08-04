@@ -36,7 +36,6 @@ t2v_A14B.sample_steps = 4
 t2v_A14B.boundary = 0.875
 t2v_A14B.sample_guide_scale = (1.0, 1.0)  # low noise, high noise
 
-
 # lora
-t2v_A14B.low_noise_lora = 'Wan2.2-lightning/Wan2.2-T2V-A14B/low_noise_model_4step_lora.safetensors'
-t2v_A14B.high_noise_lora = 'Wan2.2-lightning/Wan2.2-T2V-A14B/high_noise_model_4step_lora.safetensors'
+t2v_A14B.low_noise_lora_checkpoint = 'low_noise_model.safetensors'
+t2v_A14B.high_noise_lora_checkpoint = 'high_noise_model.safetensors'
