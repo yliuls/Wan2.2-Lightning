@@ -75,12 +75,7 @@ In some results, the direction of the vehicles may be reversed.
 ## 🔥 Latest News!!
 
 * Aug 04, 2025: 👋 We have open the  [Wan2.2-T2V-A14B-NFE4](https://hf-mirror.com/lightx2v/Wan2.2-Lightning). Enjoy!
-
-
-<!-- ## Community Works
-If your research or project builds upon [**Wan2.1**](https://github.com/Wan-Video/Wan2.1) or [**Wan2.2**](https://github.com/Wan-Video/Wan2.2), and you would like more people to see it, please inform us.
-
-- [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio) provides comprehensive support for Wan 2.2, including low-GPU-memory layer-by-layer offload, FP8 quantization, sequence parallelism, LoRA training, full training. -->
+- [Kijai's ComfyUI WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) is an implementation of Wan models for ComfyUI. Thanks to its Wan-only focus, it's on the frontline of getting cutting edge optimizations and hot research features, which are often hard to integrate into ComfyUI quickly due to its more rigid structure.
 
 
 ## 📑 Todo List
