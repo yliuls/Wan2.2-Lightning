@@ -75,7 +75,7 @@ In some results, the direction of the vehicles may be reversed.
 ## 🔥 Latest News!!
 
 * Aug 04, 2025: 👋 We have open the  [Wan2.2-T2V-A14B-NFE4](https://hf-mirror.com/lightx2v/Wan2.2-Lightning). Enjoy!
-- [Kijai's ComfyUI WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) is an implementation of Wan models for ComfyUI. Thanks to its Wan-only focus, it's on the frontline of getting cutting edge optimizations and hot research features, which are often hard to integrate into ComfyUI quickly due to its more rigid structure.
+- [Kijai's ComfyUI WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) is an implementation of Wan models for ComfyUI. Thanks to its Wan-only focus, it's on the frontline of getting cutting edge optimizations and hot research features.
 
 
 ## 📑 Todo List
