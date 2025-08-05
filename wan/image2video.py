@@ -37,7 +37,7 @@ class WanI2V:
         self,
         config,
         checkpoint_dir,
-        lora_dir,
+        lora_dir=None,
         device_id=0,
         rank=0,
         t5_fsdp=False,
@@ -107,7 +107,7 @@ class WanI2V:
             checkpoint_dir, subfolder=config.low_noise_checkpoint)
         if lora_dir:
             low_noise_lora_path = os.path.join(lora_dir, config.low_noise_lora_checkpoint)
-            self.low_noise_model = load_and_merge_lora_weight_from_safetensors(self.low_noise_model, low_noise_lora_path, alpha=8)
+            self.low_noise_model = load_and_merge_lora_weight_from_safetensors(self.low_noise_model, low_noise_lora_path)
         self.low_noise_model = self._configure_model(
             model=self.low_noise_model,
             use_sp=use_sp,
@@ -119,7 +119,7 @@ class WanI2V:
             checkpoint_dir, subfolder=config.high_noise_checkpoint)
         if lora_dir:
             high_noise_lora_path = os.path.join(lora_dir, config.high_noise_lora_checkpoint)
-            self.high_noise_model = load_and_merge_lora_weight_from_safetensors(self.high_noise_model, high_noise_lora_path, alpha=8)
+            self.high_noise_model = load_and_merge_lora_weight_from_safetensors(self.high_noise_model, high_noise_lora_path)
         self.high_noise_model = self._configure_model(
             model=self.high_noise_model,
             use_sp=use_sp,

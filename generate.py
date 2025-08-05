@@ -81,7 +81,7 @@ def _validate_args(args):
     if args.frame_num is None:
         args.frame_num = cfg.frame_num
     
-    if args.sample_solver != "euler":
+    if args.lora_dir is not None and args.sample_solver != "euler":
         warnings.warn(f"Please use euler solver because it's used in distillation")
 
     args.base_seed = args.base_seed if args.base_seed >= 0 else random.randint(
@@ -385,7 +385,15 @@ def generate(args):
                 seed=args.base_seed,
                 offload_model=args.offload_model)
             if rank == 0:
-                save_video_to_file(video=video, save_dir=args.save_dir, test_idx=i, seed=args.base_seed, prompt=prompt, task=args.task, fps=cfg.sample_fps)
+                save_video_to_file(
+                    video=video,
+                    save_dir=args.save_dir,
+                    test_idx=i,
+                    seed=args.base_seed,
+                    prompt=prompt,
+                    task=args.task,
+                    fps=cfg.sample_fps
+                )
             del video
 
     elif "ti2v" in args.task:
@@ -418,7 +426,15 @@ def generate(args):
                 seed=args.base_seed,
                 offload_model=args.offload_model)
             if rank == 0:
-                save_video_to_file(video=video, save_dir=args.save_dir, test_idx=i, seed=args.base_seed, prompt=prompt, task=args.task, fps=cfg.sample_fps)
+                save_video_to_file(
+                    video=video,
+                    save_dir=args.save_dir,
+                    test_idx=i,
+                    seed=args.base_seed,
+                    prompt=prompt,
+                    task=args.task,
+                    fps=cfg.sample_fps
+                )
             del video
 
     else:
@@ -450,7 +466,15 @@ def generate(args):
                 seed=args.base_seed,
                 offload_model=args.offload_model)
             if rank == 0:
-                save_video_to_file(video=video, save_dir=args.save_dir, test_idx=i, seed=args.base_seed, prompt=prompt, task=args.task, fps=cfg.sample_fps)
+                save_video_to_file(
+                    video=video,
+                    save_dir=args.save_dir,
+                    test_idx=i,
+                    seed=args.base_seed,
+                    prompt=prompt,
+                    task=args.task,
+                    fps=cfg.sample_fps
+                )
             del video
 
     torch.cuda.synchronize()

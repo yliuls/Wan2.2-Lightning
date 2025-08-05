@@ -42,7 +42,7 @@ class WanTI2V:
         self,
         config,
         checkpoint_dir,
-        lora_dir,
+        lora_dir=None,
         device_id=0,
         rank=0,
         t5_fsdp=False,
@@ -109,7 +109,7 @@ class WanTI2V:
         self.model = WanModel.from_pretrained(checkpoint_dir)
         if lora_dir:
             lora_path = os.path.join(lora_dir, config.lora_checkpoint)
-            self.model = load_and_merge_lora_weight_from_safetensors(self.model, lora_path, alpha=8)
+            self.model = load_and_merge_lora_weight_from_safetensors(self.model, lora_path)
         self.model = self._configure_model(
             model=self.model,
             use_sp=use_sp,
