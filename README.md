@@ -13,7 +13,7 @@ We are excited to release the distilled version of <a href="https://wan.video"><
 
 
 ## Video Demos
-### Wan2.2-T2V-A14B-NFE4
+### Wan2.2-T2V-A14B-NFE4 Demo
 
 The videos below can be reproduced using [examples/prompt_list.txt](examples/prompt_list.txt).
 
@@ -49,6 +49,25 @@ The videos below can be reproduced using [examples/prompt_list.txt](examples/pro
       </td>
        <td>
           <video src="https://github.com/user-attachments/assets/a8d07ae6-f037-4518-9b13-4a6702a3e0ae" width="100%" controls loop></video>
+     </td>
+  </tr>
+</table>
+
+### Wan2.2-T2V-A14B-NFE4 Limitation
+
+When the video contains elements with extremely large motion, the generated results may include artifacts.
+In some results, the direction of the vehicles may be reversed.
+
+<table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
+  <tr>
+      <td>
+          <video src="https://github.com/user-attachments/assets/db8f4240-7feb-4b95-8851-c52220ece9dc" width="100%" controls loop></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/43820463-22e0-41aa-a446-e0f130ef80d0" width="100%" controls loop></video>
+      </td>
+       <td>
+          <video src="https://github.com/user-attachments/assets/8a0580eb-2b35-4548-abcb-45fc0df12ff0" width="100%" controls loop></video>
      </td>
   </tr>
 </table>
