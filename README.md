@@ -15,38 +15,40 @@ We are excited to release the distilled version of <a href="https://wan.video"><
 ## Video Demos
 ### Wan2.2-T2V-A14B-NFE4
 
+The videos below can be reproduced using [examples/prompt_list.txt](examples/prompt_list.txt).
+
 <table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/29ded349-9ebd-4de4-aa3c-7cdc1089fc86" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/ae791fbb-ef4a-4f72-989a-2ac862883201" width="100%" controls loop></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/890c0b46-6cd4-4b3f-8a54-b464b6aef2ec" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/f8083a50-25a0-42a8-9cd1-635f99588b19" width="100%" controls loop></video>
       </td>
        <td>
-          <video src="https://github.com/user-attachments/assets/bc88263d-e934-4ea4-855e-820f1e5e22eb" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/5f15826b-b07b-49a2-a522-f2caea0adc60" width="100%" controls loop></video>
      </td>
   </tr>
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/4956e5b2-6f3f-4d47-a73e-8d82f010128f" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/9e48c7c2-f1a1-4d94-ade0-11e1aa913cb7" width="100%" controls loop></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/04101a92-9c19-4b47-a3fc-934f6aa2932c" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/45ae83df-af1e-4506-b00e-7d413a0dfa51" width="100%" controls loop></video>
       </td>
        <td>
-          <video src="https://github.com/user-attachments/assets/d41cb4c5-3ee5-46fa-b1ef-016b69fdd58e" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/554dd476-d9c1-49df-b6e1-d129113cb2be" width="100%" controls loop></video>
      </td>
   </tr>
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/7cfd8d7a-750a-4e76-b622-f1f63618e4a5" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/f22b8c0f-9e40-418d-8cd5-153da3678093" width="100%" controls loop></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/2bbefcb9-a519-4e3d-9449-cb9833ee6405" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/2fc03af0-7c76-48e5-ab12-fc222164ec64" width="100%" controls loop></video>
       </td>
        <td>
-          <video src="https://github.com/user-attachments/assets/6a2de19f-b9ec-4c22-82c9-49eb2fd3edb8" width="320" controls loop></video>
+          <video src="https://github.com/user-attachments/assets/a8d07ae6-f037-4518-9b13-4a6702a3e0ae" width="100%" controls loop></video>
      </td>
   </tr>
 </table>
