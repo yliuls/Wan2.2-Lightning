@@ -44,6 +44,7 @@ class WanT2V:
         t5_cpu=False,
         init_on_cpu=True,
         convert_model_dtype=False,
+        lora_dir2=None,
     ):
         r"""
         Initializes the Wan text-to-video generation model components.
@@ -105,6 +106,10 @@ class WanT2V:
         if lora_dir:
             low_noise_lora_path = os.path.join(lora_dir, config.low_noise_lora_checkpoint)
             self.low_noise_model = load_and_merge_lora_weight_from_safetensors(self.low_noise_model, low_noise_lora_path)
+        if lora_dir2:
+            low_noise_lora_path2 = os.path.join(lora_dir2, config.low_noise_lora_checkpoint)
+            self.low_noise_model = load_and_merge_lora_weight_from_safetensors(self.low_noise_model, low_noise_lora_path2)
+        
         self.low_noise_model = self._configure_model(
             model=self.low_noise_model,
             use_sp=use_sp,
@@ -117,6 +122,10 @@ class WanT2V:
         if lora_dir:
             high_noise_lora_path = os.path.join(lora_dir, config.high_noise_lora_checkpoint)
             self.high_noise_model = load_and_merge_lora_weight_from_safetensors(self.high_noise_model, high_noise_lora_path)
+        if lora_dir2:
+            high_noise_lora_path2 = os.path.join(lora_dir2, config.high_noise_lora_checkpoint)
+            self.high_noise_model = load_and_merge_lora_weight_from_safetensors(self.high_noise_model, high_noise_lora_path2)
+        
         self.high_noise_model = self._configure_model(
             model=self.high_noise_model,
             use_sp=use_sp,

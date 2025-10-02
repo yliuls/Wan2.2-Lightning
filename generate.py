@@ -126,6 +126,11 @@ def _parse_args():
         default=None,
         help="The path to the lora directory.")
     parser.add_argument(
+        "--lora_dir2",
+        type=str,
+        default=None,
+        help="The path to the second lora directory.")
+    parser.add_argument(
         "--save_dir",
         type=str,
         default="test_results",
@@ -363,6 +368,7 @@ def generate(args):
             config=cfg,
             checkpoint_dir=args.ckpt_dir,
             lora_dir=args.lora_dir,
+            lora_dir2=args.lora_dir2,
             device_id=device,
             rank=rank,
             t5_fsdp=args.t5_fsdp,
@@ -443,6 +449,7 @@ def generate(args):
             config=cfg,
             checkpoint_dir=args.ckpt_dir,
             lora_dir=args.lora_dir,
+            lora_dir2=args.lora_dir2,
             device_id=device,
             rank=rank,
             t5_fsdp=args.t5_fsdp,
@@ -454,6 +461,8 @@ def generate(args):
 
         for i, (prompt, img) in enumerate(zip(prompt_list, image_list)):
             logging.info(f"Generating video ... index:{i} seed:{args.base_seed} prompt:{prompt}")
+            import time
+            start_time = time.time()
             video = wan_i2v.generate(
                 prompt,
                 img,
@@ -465,6 +474,9 @@ def generate(args):
                 guide_scale=args.sample_guide_scale,
                 seed=args.base_seed,
                 offload_model=args.offload_model)
+            end_time = time.time()
+            logging.info(f"Generating video ... index:{i} time:{end_time - start_time}")
+
             if rank == 0:
                 save_video_to_file(
                     video=video,
